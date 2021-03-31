@@ -46,7 +46,7 @@ class App extends React.Component {
     ret.then((response)=>{
 
       console.log(response.data)
-      let listOfResults = response.data.result.keywords[0].sentiment;  
+      let listOfResults = response.data.result.sentiment.document;  
       console.log(listOfResults)
       this.setState({sentimentOutput:<EmotionTable data={listOfResults}/>});
     })
@@ -68,7 +68,7 @@ class App extends React.Component {
       req = axios.post(url);
         req.then((response)=>{
         console.log(response.data)
-        let listOfResults = response.data.result.keywords[0].emotion;
+        let listOfResults = response.data.result.emotion.document.emotion;
         this.setState({sentimentOutput:<EmotionTable data={listOfResults}/>});   
       })
       .catch(err => {
