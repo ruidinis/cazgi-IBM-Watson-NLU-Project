@@ -6,7 +6,7 @@ import axios from 'axios';
 
 class App extends React.Component {
   state = {innercomp:<textarea rows="4" cols="50" id="textinput"/>,
-            mode: "text",
+          mode: "text",
           sentimentOutput:[],
           sentiment:true
         }
@@ -17,7 +17,7 @@ class App extends React.Component {
       this.setState({innercomp:<textarea rows="4" cols="50" id="textinput"/>,
       mode: "text",
       sentimentOutput:[],
-      sentiment:true
+   
     })
     } 
   }
@@ -28,60 +28,60 @@ class App extends React.Component {
       this.setState({innercomp:<textarea rows="1" cols="50" id="textinput"/>,
       mode: "url",
       sentimentOutput:[],
-      sentiment:true
+      
     })
     }
   }
 
   sendForSentimentAnalysis = () => {
-    this.setState({sentiment:true});
-    let ret = "";
-    let url = ".";
 
+    let ret = "";
+    let url = "";
     if(this.state.mode === "url") {
-      url = url+"/url/sentiment?url="+document.getElementById("textinput").value;
+      url = url+"/url/sentiment/?url="+document.getElementById("textinput").value;
     } else {
       url = url+"/text/sentiment?text="+document.getElementById("textinput").value;
     }
-    ret = axios.get(url);
+    ret = axios.post(url);
     ret.then((response)=>{
 
-      //Include code here to check the sentiment and fomrat the data accordingly
+      console.log(response.data)
+      let listOfResults = response.data.result.keywords[0].sentiment;  
+      console.log(listOfResults)
+      this.setState({sentimentOutput:<EmotionTable data={listOfResults}/>});
+    })
+    .catch(err => {
+      console.log('error:', err);
+    }); 
+  }
+    sendForEmotionAnalysis = () => {
 
-      this.setState({sentimentOutput:response.data});
-      let output = response.data;
-      if(response.data === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
-      } else if (response.data === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
+      let req = "";
+      let url = "";
+      if(this.state.mode === "url") {
+        url = url+"/url/emotion/?url="+document.getElementById("textinput").value;
       } else {
-        output = <div style={{color:"orange",fontSize:20}}>{response.data}</div>
+        url = url+"/text/emotion/?text="+document.getElementById("textinput").value;
+        console.log(url)
       }
-      this.setState({sentimentOutput:output});
-    });
-  }
+      // response from the request to the local server
+      req = axios.post(url);
+        req.then((response)=>{
+        console.log(response.data)
+        let listOfResults = response.data.result.keywords[0].emotion;
+        this.setState({sentimentOutput:<EmotionTable data={listOfResults}/>});   
+      })
+      .catch(err => {
+        console.log('error:',err);
+      }); 
+        
+    };
 
-  sendForEmotionAnalysis = () => {
-    this.setState({sentiment:false});
-    let ret = "";
-    let url = ".";
-    if(this.state.mode === "url") {
-      url = url+"/url/emotion?url="+document.getElementById("textinput").value;
-    } else {
-      url = url+"/text/emotion/?text="+document.getElementById("textinput").value;
-    }
-    ret = axios.get(url);
-
-    ret.then((response)=>{
-      this.setState({sentimentOutput:<EmotionTable emotions={response.data}/>});
-  });
-  }
-  
-
+// load page
   render() {
     return (  
       <div className="App">
-      <button className="btn btn-info" onClick={this.renderTextArea}>Text</button>
+        <button className="btn btn-info" onClick={this.renderTextArea}>Text</button>
         <button className="btn btn-dark"  onClick={this.renderTextBox}>URL</button>
         <br/><br/>
         {this.state.innercomp}
