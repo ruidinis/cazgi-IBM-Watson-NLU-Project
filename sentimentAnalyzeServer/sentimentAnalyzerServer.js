@@ -36,8 +36,8 @@ app.post("/url/sentiment", (req,res) => {
   const analyzeParams = {
     'url': req.query.url,
     'features': {
-      'keywords': {
-        'sentiment': true
+      'sentiment': {
+        'document': true
       },
     }
   };
@@ -59,8 +59,8 @@ app.post("/text/sentiment", (req,res) => {
   const analyzeParams = {
     'text': req.query.text,
     'features': {
-      'keywords': {
-        'sentiment': true
+      'sentiment': {
+        'document': true
       },
     }
   };
@@ -84,8 +84,8 @@ app.post("/text/emotion", (req,res) => {
   const analyzeParams = {
     'text': req.query.text,
     'features': {
-      'keywords': {
-        'emotion': true
+      'emotion': {
+        'document': true
       },
     },
   };
@@ -107,8 +107,8 @@ app.post("/url/emotion", (req,res) => {
   const analyzeParams = {
     'url': req.query.url,
     'features': {
-      'keywords': {
-        'emotion': true
+      'emotion': {
+        'document': true
       },
     }
   };
